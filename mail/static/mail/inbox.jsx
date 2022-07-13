@@ -27,9 +27,9 @@ function compose_email() {
     fetch('/emails', {
       method: 'POST',
       body: JSON.stringify({
-        recipients: 'baby.titan.lin@gmail.com',
-        subject: 'this thing works?',
-        body: 'seriously. Does this work?'
+        recipients: String(recipients),
+        subject: String(subject),
+        body: String(body)
       })
     })
     .then(response => response.json())
@@ -45,11 +45,29 @@ function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
-
+  let myresult = []
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
   fetch('/emails/inbox')
   .then(response => response.json())
-  .then(result => console.log(result));
-   
+  .then(function (result) {myresult = result; return (console.log(result))});
+  function loadEmail(props) {
+    return (
+      <div class="emaildiv">
+        <p style="text-align:left;">
+          <bold>{props.sender}</bold>
+        </p>
+        <p>
+          {props.subject}
+        </p>
+        <p style="text-align:right;">
+          {props.timestamp}
+        </p>
+      </div>
+    );
+  }
+  for (let i = 0; i < myresult.length; i++) {
+    <loadEmail sender={myresult[i].sender} subject={myresult[i].subject} timestamp={myresult[i].timestamp} />    
+  }
+  return (console.log(myresult));
 }
