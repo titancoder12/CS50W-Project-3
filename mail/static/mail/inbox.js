@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function compose_email() {
-
+  clear();
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#email-view').style.display = 'none';
@@ -44,24 +44,27 @@ function compose_email() {
 }
 
 function load_mailbox(mailbox) {
-  document.querySelector('#emails-view').innerHTML = ''
+
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#email-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'none';
+  clear();
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3><hr>`;
   fetch(`/emails/${mailbox}`)
   .then(response => response.json())
   .then(function(result) {
-    for (let i = 0; i < result.length; i++){
+  //result = result.reverse();
+  for (let i = 0; i < result.length; i++){
       //mailboxdiv = document.querySelector('#emails-view');
       const emaildiv = document.createElement('div');
       emaildiv.innerHTML = `<p style="display: inline; white-space: nowrap;"><b>${result[i]['sender']}</b>    ${result[i]['subject']}</p><p style='color: gray; text-align:right;'>${result[i]['timestamp']}</p><hr>`;
       emaildiv.className = 'emaildiv';
       emaildiv.addEventListener('click', function() {
-          console.log(`Opening email ${result[i]['id']}`)
-          open_post(result[i]['id'], mailbox)
+          console.log(`Opening email ${result[i]['id']}`);
+          open_post(result[i]['id'], mailbox);
+          clear();
 
       });
       //const emaildivtext = document.createElement('p');
@@ -73,6 +76,7 @@ function load_mailbox(mailbox) {
 }
 
 function open_post(id, mailbox) {
+  clear();
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#email-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
@@ -105,7 +109,7 @@ function open_post(id, mailbox) {
       });
     }
 
-    document.querySelector('#body').innerHTML = String(result['body'])
+    document.querySelector('#body').innerHTML = String(result['body']);
   })
   fetch(`emails/${id}`, {
     method: 'PUT',
@@ -120,15 +124,24 @@ function open_post(id, mailbox) {
   //let mailboxes = ['sent', 'archive', 'inbox']
   //[sent, archive, inbox].forEach((element)=>{
     //element['selector'].addEventListener('click', function () {
-    document.querySelector('inbox').addEventListener('click', function (){
+  let mailboxes = ['inbox', 'sent', 'archived'];
+  let mailbox_load_name = ['inbox', 'sent', 'archive'];
+
+  for (let i = 0; i < 3; i++){
+    document.querySelector('#' + mailboxes[i]).addEventListener('click', function (){
       document.querySelector('#sender').innerHTML = '<b>From: </b>';
       document.querySelector('#reciever').innerHTML = '<b>To: </b>';
       document.querySelector('#subject').innerHTML = '<b>Subject: </b>';
       document.querySelector('#timestamp').innerHTML = '<b>Timestamp: </b>';
       document.querySelector('#body').innerHTML = '';
       document.querySelector('#buttons').innerHTML = '';
-      i++;
-      load_mailbox(mailboxes[i]);
+      clear();
+      load_mailbox(mailbox_load_name[i]);
     });
-  //});
+  }
+}
+
+function clear() {
+  document.querySelector('#emails-view').innerHTML = '';
+  return true;
 }
