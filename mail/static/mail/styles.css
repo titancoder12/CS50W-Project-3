@@ -2,6 +2,7 @@ textarea {
     min-height: 400px;
 }
 
-.emaildiv {
-    border-color:black;
+.emaildiv:hover {
+    background-color: rgb(238, 238, 238);
+    cursor: pointer;
 }

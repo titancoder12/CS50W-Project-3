@@ -10,7 +10,6 @@
     <button class="btn btn-sm btn-outline-primary" id="archived">Archived</button>
     <a class="btn btn-sm btn-outline-primary" href="{% url 'logout' %}">Log Out</a>
     <hr>
-
     <div id="emails-view">
     </div>
 
@@ -30,8 +29,20 @@
             <input id="compose-submit" type="submit" class="btn btn-primary"/>
         </form>
     </div>
+
+    <div id="email-view">
+        <p id="sender"><b>From: </b></p>
+        <p id="reciever"><b>To: </b></p>
+        <p id="subject"><b>Subject: </b></p>
+        <p id="timestamp"><b>Timestamp: </b></p>
+        <div id="buttons">
+        </div>
+        <hr>
+        <p id="body">
+        </p>
+    </div>
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'mail/inbox.jsx' %}"></script>
+    <script src="{% static 'mail/inbox.js' %}"></script>
 {% endblock %}
