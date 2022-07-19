@@ -44,7 +44,7 @@ function compose_email() {
 }
 
 function load_mailbox(mailbox) {
-
+  document.querySelector('#emails-view').value = '';
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#email-view').style.display = 'none';
@@ -76,6 +76,8 @@ function load_mailbox(mailbox) {
 }
 
 function open_post(id, mailbox) {
+  clear();
+  document.querySelector('#emails-view').innerHTML = '';
   clear();
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#email-view').style.display = 'block';
@@ -128,7 +130,7 @@ function open_post(id, mailbox) {
   let mailbox_load_name = ['inbox', 'sent', 'archive'];
 
   for (let i = 0; i < 3; i++){
-    document.querySelector('#' + mailboxes[i]).addEventListener('click', function (){
+    document.querySelector('#' + mailboxes[i]).onclick = function (){
       document.querySelector('#sender').innerHTML = '<b>From: </b>';
       document.querySelector('#reciever').innerHTML = '<b>To: </b>';
       document.querySelector('#subject').innerHTML = '<b>Subject: </b>';
@@ -137,7 +139,7 @@ function open_post(id, mailbox) {
       document.querySelector('#buttons').innerHTML = '';
       clear();
       load_mailbox(mailbox_load_name[i]);
-    });
+    };
   }
 }
 
