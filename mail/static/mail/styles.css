@@ -9,3 +9,8 @@ textarea {
 .emaildiv {
     cursor:pointer;
 }
+
+iframe.hidden
+{
+display:none
+}
