@@ -15,7 +15,8 @@
 
     <div id="compose-view">
         <h3>New Email</h3>
-        <form id="compose-form">
+        <iframe class="hidden" name="formSending"></iframe>
+        <form id="compose-form" target="formSending">
             <div class="form-group">
                 From: <input disabled class="form-control" value="{{ request.user.email }}">
             </div>
