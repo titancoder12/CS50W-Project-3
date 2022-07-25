@@ -11,14 +11,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function compose_email(reply) {
-  if (reply === undefined) {
+  //if (reply === undefined) {
     document.querySelector('#compose-recipients').value = '';
     document.querySelector('#compose-subject').value = '';
     document.querySelector('#compose-body').value = '';
-  }
-  else {
-    reply = true;
-  }
+  //}
+  //else {
+    //reply = true;
+  //}
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#email-view').style.display = 'none';
@@ -61,19 +61,26 @@ function load_mailbox(mailbox) {
   .then(function(result) {
   //result = result.reverse();
   for (let i = 0; i < result.length; i++){
-      //mailboxdiv = document.querySelector('#emails-view');
-      const emaildiv = document.createElement('div');
-      emaildiv.innerHTML = `<p style="display: inline; white-space: nowrap;"><b>${result[i]['sender']}</b>    ${result[i]['subject']}</p><p style='color: gray; text-align:right;'>${result[i]['timestamp']}</p><hr>`;
-      emaildiv.className = 'emaildiv';
-      emaildiv.addEventListener('click', function() {
-          console.log(`Opening email ${result[i]['id']}`);
-          open_post(result[i]['id'], mailbox);
-          clear();
+    //mailboxdiv = document.querySelector('#emails-view');
+    const emaildiv = document.createElement('div');
+    emaildiv.innerHTML = `<p style="display: inline; white-space: nowrap;"><b>${result[i]['sender']}</b>    ${result[i]['subject']}</p><p style='color: gray; text-align:right;'>${result[i]['timestamp']}</p><hr>`;
+    emaildiv.className = 'emaildiv';
+    emaildiv.addEventListener('click', function() {
+        console.log(`Opening email ${result[i]['id']}`);
+        open_post(result[i]['id'], mailbox);
+        clear();
 
-      });
-      //const emaildivtext = document.createElement('p');
-      //emaildivtext.innerHTML = result[0]['sender'];
-      document.querySelector('#emails-view').append(emaildiv);
+    });
+    fetch('/emails/'+result[i]['id'])
+    .then(response => response.json())
+    .then(function (email){
+      if (email.read===false){
+      emaildiv.style.backgroundColor = "rgb(200, 216, 216)";
+    }
+    })
+    //const emaildivtext = document.createElement('p');
+    //emaildivtext.innerHTML = result[0]['sender'];
+    document.querySelector('#emails-view').append(emaildiv);
     }
   });
   
@@ -93,9 +100,11 @@ function open_post(id, mailbox) {
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#email-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
+  let myemail = {};
   fetch(`/emails/${id}`)
   .then(response => response.json())
   .then(function(result) {
+    myemail = result
     const sender = document.createTextNode(String(result['sender']));
     document.querySelector('#sender').appendChild(sender);
 
@@ -110,25 +119,21 @@ function open_post(id, mailbox) {
     
     body = document.querySelector('#body').innerHTML = String(result['body']);
 
-    let myemail = {};
     if (mailbox != 'sent'){
       archivebtn = document.createElement('button');
       archivebtn.className = 'btn btn-sm btn-outline-primary';
       document.querySelector('#buttons').appendChild(archivebtn);
       fetch('/emails/'+id)
       .then(response => response.json())
-      .then(function (email) {
-        myemail = email;
-        console.log(myemail);
-      })
+      .then(email => console.log(email))
       .then(function (){
-        console.log(myemail.archived===true);
-        if (myemail.archived===false){
-          archivebtn.innerHTML = 'Archive';
-        }
-        else if (myemail.archived===true){
-          archivebtn.innerHTML = 'Unarchive';
-        }
+       console.log(myemail.archived===true);
+       if (myemail.archived===false){
+        archivebtn.innerHTML = 'Archive';
+      }
+      else if (myemail.archived===true){
+        archivebtn.innerHTML = 'Unarchive';
+      }
       })
       
       archivebtn.addEventListener('click', function () {
@@ -184,6 +189,8 @@ function open_post(id, mailbox) {
   document.querySelector('#buttons').appendChild(replybtn);
   replybtn.innerHTML = 'Reply';
   replybtn.addEventListener('click', function(){
+    compose_email()
+    console.log("reply has been clicked!")
     document.querySelector('#compose-recipients').value = myemail.sender;
     if (myemail.subject.slice(0, 2) != 'Re'){
       document.querySelector('#compose-subject').value = 'Re: '+myemail.subject;
@@ -194,7 +201,7 @@ function open_post(id, mailbox) {
     body = myemail.body;
     body = body.replaceAll('<br>', '\n');
     document.querySelector('#compose-body').value = `On ${myemail.timestamp} ${myemail.sender} wrote:\n${body}`;
-    compose_email(true);  
+    //compose_email(true);  
   });  
   for (let i = 0; i < 3; i++){
     document.querySelector('#' + mailboxes[i]).addEventListener('click', function (){
