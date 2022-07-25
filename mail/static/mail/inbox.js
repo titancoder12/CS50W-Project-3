@@ -41,7 +41,6 @@ function compose_email(reply) {
     .then(response => response.json())
     .then(result => {
       console.log(result)
-      return false;
     });
     load_mailbox('inbox');
   })
@@ -60,29 +59,25 @@ function load_mailbox(mailbox) {
   fetch(`/emails/${mailbox}`)
   .then(response => response.json())
   .then(function(result) {
-  //result = result.reverse();
-  for (let i = 0; i < result.length; i++){
-    //mailboxdiv = document.querySelector('#emails-view');
-    const emaildiv = document.createElement('div');
-    emaildiv.innerHTML = `<p style="display: inline; white-space: nowrap;"><b>${result[i]['sender']}</b>    ${result[i]['subject']}</p><p style='color: gray; text-align:right;'>${result[i]['timestamp']}</p><hr>`;
-    emaildiv.className = 'emaildiv';
-    emaildiv.addEventListener('click', function() {
-        console.log(`Opening email ${result[i]['id']}`);
-        open_post(result[i]['id'], mailbox);
-        clear();
+    //result = result.reverse();
+    for (let i = 0; i < result.length; i++){
+      //mailboxdiv = document.querySelector('#emails-view');
+      const emaildiv = document.createElement('div');
+      emaildiv.innerHTML = `<p style="display: inline; white-space: nowrap;"><b>${result[i]['sender']}</b>    ${result[i]['subject']}</p><p style='color: gray; text-align:right;'>${result[i]['timestamp']}</p><hr>`;
+      emaildiv.className = 'emaildiv';
+      emaildiv.addEventListener('click', function() {
+          console.log(`Opening email ${result[i]['id']}`);
+          open_post(result[i]['id'], mailbox);
+          clear();
 
-    });
-    fetch('/emails/'+result[i]['id'])
-    .then(response => response.json())
-    .then(function (email){
-      if (email.read===false){
-        emaildiv.style.backgroundColor = "rgb(200, 216, 216)";
-      }
-      console.log(email);
-    })
-    //const emaildivtext = document.createElement('p');
-    //emaildivtext.innerHTML = result[0]['sender'];
-    document.querySelector('#emails-view').append(emaildiv);
+      });
+        if (result[i]["read"]===false){
+          emaildiv.style.backgroundColor = "rgb(200, 216, 216)";
+        }
+        console.log(email);
+      //const emaildivtext = document.createElement('p');
+      //emaildivtext.innerHTML = result[0]['sender'];
+      document.querySelector('#emails-view').append(emaildiv);
     }
   });
   
