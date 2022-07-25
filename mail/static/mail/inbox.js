@@ -43,8 +43,9 @@ function compose_email(reply) {
       console.log(result)
       return false;
     });
-    return load_mailbox('inbox');
+    load_mailbox('inbox');
   })
+  return false;
 }
 
 function load_mailbox(mailbox) {
@@ -75,8 +76,9 @@ function load_mailbox(mailbox) {
     .then(response => response.json())
     .then(function (email){
       if (email.read===false){
-      emaildiv.style.backgroundColor = "rgb(200, 216, 216)";
-    }
+        emaildiv.style.backgroundColor = "rgb(200, 216, 216)";
+      }
+      console.log(email);
     })
     //const emaildivtext = document.createElement('p');
     //emaildivtext.innerHTML = result[0]['sender'];
@@ -91,7 +93,7 @@ function open_post(id, mailbox) {
   document.querySelector('#sender').innerHTML = '<b>From: </b>';
   document.querySelector('#reciever').innerHTML = '<b>To: </b>';
   document.querySelector('#subject').innerHTML = '<b>Subject: </b>';
-  document.querySelector('#timestamp').innerHTML = '<b>Timestamp:</b>';
+  document.querySelector('#timestamp').innerHTML = '<b>Timestamp: </b>';
   document.querySelector('#body').innerHTML = '';
   document.querySelector('#buttons').innerHTML = '';
   clear();
@@ -208,7 +210,7 @@ function open_post(id, mailbox) {
       document.querySelector('#sender').innerHTML = '<b>From: </b>';
       document.querySelector('#reciever').innerHTML = '<b>To: </b>';
       document.querySelector('#subject').innerHTML = '<b>Subject: </b>';
-      document.querySelector('#timestamp').innerHTML = '<b>Timestamp:</b>';
+      document.querySelector('#timestamp').innerHTML = '<b>Timestamp: </b>';
       document.querySelector('#body').innerHTML = '';
       document.querySelector('#buttons').innerHTML = '';
     });
