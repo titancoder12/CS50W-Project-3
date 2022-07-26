@@ -4,17 +4,18 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
-  document.querySelector('#compose').addEventListener('click', compose_email)
+  document.querySelector('#compose').addEventListener('click', compose_email);
 
   // By default, load the inbox
   load_mailbox('inbox');
 });
 
-function compose_email(reply) {
+function compose_email() {
+  console.log("Newemail being created");
   //if (reply === undefined) {
-    document.querySelector('#compose-recipients').value = '';
-    document.querySelector('#compose-subject').value = '';
-    document.querySelector('#compose-body').value = '';
+  document.querySelector('#compose-recipients').value = '';
+  document.querySelector('#compose-subject').value = '';
+  document.querySelector('#compose-body').value = '';
   //}
   //else {
     //reply = true;
@@ -41,10 +42,10 @@ function compose_email(reply) {
     .then(response => response.json())
     .then(result => {
       console.log(result)
-      return false;
-    });
-    load_mailbox('inbox');
-  })
+    
+    })
+    .then(() => load_mailbox('inbox'));
+  });
   return false;
 }
 
@@ -72,11 +73,11 @@ function load_mailbox(mailbox) {
         clear();
 
     });
-    fetch('/emails/'+result[i]['id'])
+    fetch('/emails/'+result[i]["id"])
     .then(response => response.json())
     .then(function (email){
       if (email.read===false){
-        emaildiv.style.backgroundColor = "rgb(200, 216, 216)";
+        emaildiv.style.backgroundColor = gray;
       }
       console.log(email);
     })
@@ -85,7 +86,7 @@ function load_mailbox(mailbox) {
     document.querySelector('#emails-view').append(emaildiv);
     }
   });
-  
+  return false;
 }
 
 function open_post(id, mailbox) {
@@ -173,7 +174,7 @@ function open_post(id, mailbox) {
   };
   });
 
-  fetch(`emails/${id}`, {
+  fetch('/emails/'+id, {
     method: 'PUT',
     body: JSON.stringify({
         read: true
@@ -191,8 +192,8 @@ function open_post(id, mailbox) {
   document.querySelector('#buttons').appendChild(replybtn);
   replybtn.innerHTML = 'Reply';
   replybtn.addEventListener('click', function(){
-    compose_email()
-    console.log("reply has been clicked!")
+    compose_email();
+    console.log("reply has been clicked!");
     document.querySelector('#compose-recipients').value = myemail.sender;
     if (myemail.subject.slice(0, 2) != 'Re'){
       document.querySelector('#compose-subject').value = 'Re: '+myemail.subject;
