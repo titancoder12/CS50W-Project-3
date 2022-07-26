@@ -25,9 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(response => response.json())
     .then(result => {
       console.log(result)
-    
     })
-    .then(() => load_mailbox('inbox'));
+    .then(() => load_mailbox('sent'));
   });
 
   // By default, load the inbox
@@ -72,10 +71,10 @@ function compose_email() {
     })
     .then(() => load_mailbox('inbox'));
   });*/
-  return false;
 }
 
 function load_mailbox(mailbox) {
+  clear();
   document.querySelector('#emails-view').value = '';
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
@@ -182,7 +181,8 @@ function open_post(id, mailbox) {
               })
             })
             archivebtn.innerHTML = 'Archive';
-            return true;
+            load_mailbox('inbox');
+            return load_mailbox('inbox');
           }
           else {
             fetch('/emails/'+id, {
@@ -192,9 +192,11 @@ function open_post(id, mailbox) {
               })
             })
             archivebtn.innerHTML = 'Unarchive';
-            return true;
+            load_mailbox('inbox');
+            return load_mailbox('inbox');
           }
-        });
+        })
+        //return load_mailbox('inbox')
     });
 
   };
