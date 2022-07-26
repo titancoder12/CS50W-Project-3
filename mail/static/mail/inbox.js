@@ -180,9 +180,11 @@ function open_post(id, mailbox) {
                   archived: false
               })
             })
-            archivebtn.innerHTML = 'Archive';
-            load_mailbox('inbox');
-            return load_mailbox('inbox');
+            .then(function(){
+              archivebtn.innerHTML = 'Archive';
+              clear();
+              return load_mailbox('inbox');
+            })
           }
           else {
             fetch('/emails/'+id, {
@@ -191,9 +193,11 @@ function open_post(id, mailbox) {
                   archived: true
               })
             })
-            archivebtn.innerHTML = 'Unarchive';
-            load_mailbox('inbox');
-            return load_mailbox('inbox');
+            .then(function(){
+              archivebtn.innerHTML = 'Unarchive';
+              clear();
+              return load_mailbox('inbox');
+            })
           }
         })
         //return load_mailbox('inbox')
