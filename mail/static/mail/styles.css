@@ -2,8 +2,12 @@ textarea {
     min-height: 400px;
 }
 
-.emaildiv:hover {
-    background-color: rgb(216, 216, 216);
+.unread:hover {
+    background-color: rgb(160, 160, 160) !important;
+}
+
+.unread {
+    background-color: rgb(255, 255, 255) !important;
 }
 
 .emaildiv {
@@ -15,10 +19,10 @@ iframe.hidden
     display:none
 }
 
-.unread {
-    background-color: rgb(211, 211, 211);
+.emaildiv {
+    background-color: rgb(211, 211, 211)
 }
 
-.unread:hover {
+.emaildiv:hover {
     background-color: rgb(160, 160, 160) !important;
 }
