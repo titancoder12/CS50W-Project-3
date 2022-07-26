@@ -14,3 +14,11 @@ iframe.hidden
 {
     display:none
 }
+
+.unread {
+    background-color: rgb(211, 211, 211);
+}
+
+.unread:hover {
+    background-color: rgb(160, 160, 160) !important;
+}

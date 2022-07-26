@@ -6,26 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
   document.querySelector('#compose').addEventListener('click', compose_email);
 
-  // By default, load the inbox
-  load_mailbox('inbox');
-});
-
-function compose_email() {
-  console.log("Newemail being created");
-  //if (reply === undefined) {
-  document.querySelector('#compose-recipients').value = '';
-  document.querySelector('#compose-subject').value = '';
-  document.querySelector('#compose-body').value = '';
-  //}
-  //else {
-    //reply = true;
-  //}
-  // Show compose view and hide other views
-  document.querySelector('#emails-view').style.display = 'none';
-  document.querySelector('#email-view').style.display = 'none';
-  document.querySelector('#compose-view').style.display = 'block';
 
   document.querySelector('#compose-submit').addEventListener('click', function () { 
+    console.log("*********** SUBMIT **********");
     recipients = document.querySelector('#compose-recipients').value;
     subject = document.querySelector('#compose-subject').value;
     body = document.querySelector('#compose-body').value;
@@ -46,6 +29,49 @@ function compose_email() {
     })
     .then(() => load_mailbox('inbox'));
   });
+
+  // By default, load the inbox
+  load_mailbox('inbox');
+});
+
+function compose_email() {
+  console.log("########### compose_email ############");
+  console.log("Newemail being created");
+  //if (reply === undefined) {
+  document.querySelector('#compose-recipients').value = '';
+  document.querySelector('#compose-subject').value = '';
+  document.querySelector('#compose-body').value = '';
+  //}
+  //else {
+    //reply = true;
+  //}
+  // Show compose view and hide other views
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#email-view').style.display = 'none';
+  document.querySelector('#compose-view').style.display = 'block';
+  /*
+  document.querySelector('#compose-submit').addEventListener('click', function () { 
+    console.log("*********** SUBMIT **********");
+    recipients = document.querySelector('#compose-recipients').value;
+    subject = document.querySelector('#compose-subject').value;
+    body = document.querySelector('#compose-body').value;
+    body = body.replaceAll('\n', '<br>');
+    console.log(body);
+    fetch('/emails', {
+      method: 'POST',
+      body: JSON.stringify({
+        recipients: String(recipients),
+        subject: String(subject),
+        body: String(body)
+      })
+    })
+    .then(response => response.json())
+    .then(result => {
+      console.log(result)
+    
+    })
+    .then(() => load_mailbox('inbox'));
+  });*/
   return false;
 }
 
@@ -66,7 +92,7 @@ function load_mailbox(mailbox) {
       //mailboxdiv = document.querySelector('#emails-view');
       const emaildiv = document.createElement('div');
       emaildiv.innerHTML = `<p style="display: inline; white-space: nowrap;"><b>${result[i]['sender']}</b>    ${result[i]['subject']}</p><p style='color: gray; text-align:right;'>${result[i]['timestamp']}</p><hr>`;
-      emaildiv.className = 'emaildiv';
+      emaildiv.classList.add('emaildiv');
       emaildiv.addEventListener('click', function() {
           console.log(`Opening email ${result[i]['id']}`);
           open_post(result[i]['id'], mailbox);
@@ -77,7 +103,7 @@ function load_mailbox(mailbox) {
     .then(response => response.json())
     .then(function (email){
       if (email.read===false){
-        emaildiv.style.backgroundColor = gray;
+        emaildiv.classList.add('unread');
       }
       console.log(email);
     })
